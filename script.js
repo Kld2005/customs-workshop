@@ -334,12 +334,12 @@ function renderVisitorStaffTable() {
 
 function getRankLabel(rank) {
     const labels = {
-        'Owner': 'Owner - الملاك',
-        'Co Owner': 'Co Owner - نواب المالك',
-        'General Manager': 'General Manager - الإدارة العامة',
-        'Supervisor': 'Supervisor - المشرفين',
-        'Mechanic': 'Mechanic - الفنيين والميكانيكيين',
-        'Trainee': 'Trainee - المتدربين'
+        'Owner': 'Owner',
+        'Co Owner': 'Co Owner ',
+        'General Manager': 'General Manager',
+        'Supervisor': 'Supervisor',
+        'Mechanic': 'Mechanic',
+        'Trainee': 'Trainee'
     };
     return labels[rank] || rank;
 }
