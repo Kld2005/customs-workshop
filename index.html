@@ -3,403 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Los Santos Customs</title>
+    <title>Customs Workshop</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* تنسيقات إضافية لضمان تفادي تداخل الأزرار وتحسين الألوان المباشرة */
+        .btn-inline-save {
+            background-color: #28a745 !important;
+            color: white !important;
+            border: none !important;
+            padding: 6px 14px !important;
+            margin: 2px 4px !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            font-weight: bold !important;
+            display: inline-block !important;
         }
-
-        body {
-            background-color: #0b0b0b;
-            color: #ffffff;
+        .btn-inline-cancel {
+            background-color: #dc3545 !important;
+            color: white !important;
+            border: none !important;
+            padding: 6px 14px !important;
+            margin: 2px 4px !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            font-weight: bold !important;
+            display: inline-block !important;
+        }
+        .inline-editing-row td {
+            padding: 8px 4px !important;
+            vertical-align: middle;
+        }
+        
+        /* تنسيقات أزرار التنقل السريعة بلوحة التحكم (Tabs) */
+        .admin-tabs-nav {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            gap: 12px;
             justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-            background-image: radial-gradient(circle, #151515 0%, #050505 100%);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 950px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .page {
-            display: none;
-            width: 100%;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        /* ================= ستايل الصفحة الرئيسية ================= */
-        .welcome-screen {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 50vh;
-        }
-
-        .top-logo {
-            width: 120px; 
-            height: auto;
-            margin-bottom: 15px; 
-            object-fit: contain;
-        }
-
-        .main-logo {
-            font-size: 45px;
-            font-weight: bold;
-            color: #7a58bf; 
-            text-shadow: 0 0 20px rgba(122, 88, 191, 0.4);
-            margin-bottom: 10px;
-            font-style: italic;
-        }
-
-        .sub-logo {
-            font-size: 14px;
-            color: #888;
-            letter-spacing: 2px;
-            margin-bottom: 40px;
-        }
-
-        .main-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
+            margin: 20px 0;
             flex-wrap: wrap;
         }
-
-        .btn-main {
-            background: #141414;
+        .admin-tab-btn {
+            background: rgba(255, 255, 255, 0.05);
             color: #fff;
-            border: 1px solid #333;
-            padding: 15px 30px;
-            font-size: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 24px;
+            font-size: 14px;
             font-weight: 600;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            min-width: 180px;
+            font-family: inherit;
         }
-
-        .btn-main:hover {
-            border-color: #7a58bf;
-            color: #7a58bf;
-            transform: translateY(-2px);
+        .admin-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #e5b842;
         }
-
-        /* ================= ستايل الجداول ================= */
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            width: 100%;
+        .admin-tab-btn.active-products {
+            background: #e5b842;
+            color: #000;
+            border-color: #e5b842;
+            box-shadow: 0 0 12px rgba(229, 184, 66, 0.3);
         }
-
-        .page-title {
-            font-size: 22px;
-            color: #fff;
-        }
-
-        .category-title {
-            font-size: 18px;
-            color: #e5b842;
-            margin: 25px 0 15px 0;
-            padding-right: 10px;
-            border-right: 3px solid #e5b842;
-        }
-
-        .staff-category-title {
-            font-size: 18px;
-            color: #7a58bf;
-            margin: 25px 0 15px 0;
-            padding-right: 10px;
-            border-right: 3px solid #7a58bf;
-        }
-
-        .btn-back {
-            background: #141414;
-            border: 1px solid #333;
-            color: #aaa;
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .btn-back:hover { color: #fff; border-color: #555; }
-
-        .table-container {
-            background: #111111;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #1a1a1a;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: right;
-        }
-
-        th, td {
-            padding: 16px 24px;
-            border-bottom: 1px solid #181818;
-        }
-
-        th {
-            background-color: #161616;
-            color: #888;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        tr:hover { background-color: #141414; }
-
-        .price-civilian { color: #ffbc00; font-weight: bold; text-align: left; }
-        .price-military { color: #4da6ff; font-weight: bold; text-align: left; }
-        
-        .txt-left { text-align: left !important; }
-        .txt-center { text-align: center !important; }
-
-        .empty-msg {
-            text-align: center;
-            color: #555;
-            padding: 20px;
-            font-style: italic;
-        }
-
-        .package-card {
-            background: #111111;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            width: 100%;
-        }
-
-        .package-title {
-            color: #7a58bf;
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .badge-owner { color: #ff3333; font-weight: bold; }
-        .badge-coowner { color: #ff9933; font-weight: bold; }
-        .badge-manager { color: #33ff33; font-weight: bold; }
-        .badge-supervisor { color: #33ffff; font-weight: bold; }
-        .badge-mechanic { color: #ffff33; font-weight: bold; }
-        .badge-trainee { color: #aaaaaa; font-style: italic; }
-
-        /* ================= لوحة التحكم ================= */
-        .login-box {
-            background: #111111;
-            padding: 40px;
-            border-radius: 12px;
-            border: 1px solid #222;
-            text-align: center;
-            max-width: 400px;
-            margin: -100px auto 0 auto; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-        }
-
-        .login-box h3 { margin-bottom: 20px; color: #7a58bf; }
-
-        .login-box input, .admin-form input, .admin-form select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #fff;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        .admin-form select {
-            text-align-last: center;
-            cursor: pointer;
-        }
-
-        .login-box button, .admin-form button, .btn-logout {
+        .admin-tab-btn.active-staff {
             background: #7a58bf;
             color: #fff;
-            border: none;
-            padding: 12px 25px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            transition: 0.3s;
+            border-color: #7a58bf;
+            box-shadow: 0 0 12px rgba(122, 88, 191, 0.3);
         }
-        .login-box button:hover, .admin-form button:hover { background: #6343a3; }
-
-        .admin-form {
-            background: #111111;
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #222;
-            margin-bottom: 25px;
+        .admin-tab-btn.active-orders {
+            background: #ff9f43;
+            color: #000;
+            border-color: #ff9f43;
+            box-shadow: 0 0 12px rgba(255, 159, 67, 0.3);
         }
-
-        .admin-form h3 { margin-bottom: 15px; color: #7a58bf; }
-
-        .admin-inputs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+        .admin-sub-section {
+            animation: fadeInTab 0.4s ease-in-out;
         }
-
-        .admin-inputs input, .admin-inputs select { flex: 1; min-width: 140px; margin-bottom: 0; text-align: right; }
-
-        .btn-edit {
-            background: #ffbc00;
-            color: black;
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 5px;
-            font-weight: bold;
-        }
-
-        .btn-delete {
-            background: #ff4d4d;
-            color: white;
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-logout { background: #222; color: #bbb; margin-top: 20px; border: 1px solid #333; }
-        .btn-logout:hover { background: #333; color: #fff; }
-
-        .footer-text {
-            margin-top: 40px;
-            font-size: 12px;
-            color: #444;
-            text-align: center;
-            width: 100%;
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
+    <div id="splash-screen">
+        <div class="splash-content">
+            <img src="customs.png" alt="Customs" class="splash-logo" onerror="this.style.display='none'">
+            <h1 class="splash-title">مرحباً بك في ورشة Customs</h1>
+            <div class="loading-bar"><span></span></div>
+        </div>
+    </div>
+
     <div class="container">
 
-        <!-- ================= 1. الصفحة الرئيسية ================= -->
         <div id="welcome-page" class="page active welcome-screen">
-            <!-- لتفعيل الصورة، قم بإزالة علامات التعليق أدناه وضع اسم ملف صورتك -->
-            <img src="logo.png" alt="الشعار" class="top-logo">
+            <div class="welcome-bg-overlay"></div>
             
-            <div class="main-logo">Los Santos</div>
-            <div class="sub-logo">CUSTOMS WORKSHOP</div>
+            <img src="customs.png" alt="Customs" class="top-logo" onerror="this.style.display='none'">
+            <div class="main-logo">Customs Workshop</div>
+            <div class="sub-logo">Welcome to the official website of my workshop | GOLDEN TOWN</div>
             
             <div class="main-buttons">
                 <button class="btn-main" onclick="switchPage('prices-page')">الأسعار والمنتجات</button>
                 <button class="btn-main" onclick="switchPage('staff-page')">قائمة الموظفين</button>
-                <button class="btn-main" onclick="switchPage('admin-auth-page')">لوحة التحكم</button>
+                <button class="btn-main" onclick="switchPage('rating-page')">تقييم الموظفين</button>
+                <button class="btn-main" onclick="switchPage('apply-page')">التقديم على وظيفة</button>
+                <button class="btn-main" onclick="switchPage('about-page')">نبذة عن الورشة</button>
+                <button class="btn-main" onclick="switchPage('admin-auth-page')" style="border-color: #cc3333;">لوحة التحكم</button>
             </div>
-            <div class="footer-text">قائمة الأسعار والوظائف الرسمية | GOLDEN TOWN AREA RP</div>
+            <div class="footer-text">جميع الحقوق محفوظة © DEV 5LD</div>   
         </div>
 
-        <!-- ================= 2. صفحة الأسعار والمنتجات ================= -->
-        <div id="prices-page" class="page">
+        <div id="prices-page" class="page" style="display: none;">
             <div class="header-section">
-                <div class="page-title">قائمة الأسعار والخدمات</div>
+                <div class="page-title">باقات وقطع التعديل المتاحة</div>
+                <div class="nav-links-custom">
+                    <button class="btn-nav-link active" onclick="switchPage('prices-page')">الأسعار والمنتجات</button>
+                    <button class="btn-nav-link" onclick="switchPage('staff-page')">قائمة الموظفين</button>
+                    <button class="btn-nav-link" onclick="switchPage('rating-page')">تقييم الموظفين</button>
+                    <button class="btn-nav-link" onclick="switchPage('apply-page')">التقديم على وظيفة</button>
+                </div>
                 <button class="btn-back" onclick="switchPage('welcome-page')">رجوع للرئيسية</button>
             </div>
 
-            <div class="category-title">تعديل أداء المركبة (المحرك، القير...)</div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>اسم الخدمة / القطعة</th>
-                            <th class="txt-left">سعر العسكري / الشرطة</th>
-                            <th class="txt-left">سعر المواطن</th>
-                        </tr>
-                    </thead>
-                    <tbody id="perf-table-body"></tbody>
-                </table>
-            </div>
-
-            <div class="category-title">الإضافات والمنتجات التجميلية (الألوان، الجنوط...)</div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>اسم الخدمة / القطعة</th>
-                            <th class="txt-left">سعر العسكري / الشرطة</th>
-                            <th class="txt-left">سعر المواطن</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cosm-table-body"></tbody>
-                </table>
-            </div>
-
-            <div class="package-card">
-                <div style="text-align: right;">
-                    <div class="package-title">Full Tune Package</div>
-                    <div style="font-size: 13px; color: #666;">مجموع أسعار كافة قطع التعديل والخدمات المتوفرة بالموقع</div>
+            <div class="live-calculator-box">
+                <div class="calc-header">
+                    <span>فاتورة التعديل التقديرية (الحاسبة المباشرة)</span>
+                    <button class="btn-reset-calc" onclick="resetCalculator()">تصفير الحساب</button>
                 </div>
-                <div style="display: flex; gap: 40px;">
-                    <div>
-                        <div class="price-military" id="total-military" style="font-size: 24px;">0</div>
-                        <div style="font-size: 11px; color: #555; text-align: left; margin-top: 2px;">مجموع العسكري</div>
+                <div class="calc-results">
+                    <div class="calc-res-item">
+                        <span class="price-military" id="calc-total-military">0</span>
+                        <small>مجموع السعر العسكري</small>
                     </div>
-                    <div>
-                        <div class="price-civilian" id="total-civilian" style="font-size: 24px;">0</div>
-                        <div style="font-size: 11px; color: #555; text-align: left; margin-top: 2px;">مجموع المواطن</div>
+                    <div class="calc-res-item">
+                        <span class="price-civilian" id="calc-total-civilian">0</span>
+                        <small>مجموع سعر المواطن</small>
+                    </div>
+                    <div class="calc-res-item">
+                        <span style="color: #ff9f43;" id="calc-total-package">0</span>
+                        <small>مجموع الباقات الخاصة</small>
+                    </div>
+                </div>
+
+                <div class="send-order-form">
+                    <h4>إرسال طلب التعديل مباشرة إلى الفنيين بالورشة:</h4>
+                    <div class="order-inputs">
+                        <input type="text" id="order-cust-name" placeholder="اسمك الكريم / ID">
+                        <select id="order-cust-type">
+                            <option value="civilian">أنا مواطن</option>
+                            <option value="military">أنا عسكري</option>
+                        </select>
+                        <button class="btn-send-order" onclick="submitTuningOrder()">إرسال الطلب الآن</button>
                     </div>
                 </div>
             </div>
+
+            <div class="category-title" style="color: #ff9f43; border-right-color: #ff9f43;">الباقات الخاصة (سعر موحد للجميع)</div>
+            <div class="cards-grid" id="special-cards-container"></div>
+
+            <div class="category-title">قطع تعديل الأداء وتطوير المحرك</div>
+            <div class="cards-grid" id="perf-cards-container"></div>
+
+            <div class="category-title" style="color: #7a58bf; border-right-color: #7a58bf;">الإضافات والمنتجات التجميلية</div>
+            <div class="cards-grid" id="cosm-cards-container"></div>
         </div>
 
-        <!-- ================= 3. صفحة عرض الموظفين ================= -->
-        <div id="staff-page" class="page">
+        <div id="staff-page" class="page" style="display: none;">
             <div class="header-section">
                 <div class="page-title">طاقم عمل ورشة Customs</div>
+                <div class="nav-links-custom">
+                    <button class="btn-nav-link" onclick="switchPage('prices-page')">الأسعار والمنتجات</button>
+                    <button class="btn-nav-link active" onclick="switchPage('staff-page')">قائمة الموظفين</button>
+                    <button class="btn-nav-link" onclick="switchPage('rating-page')">تقييم الموظفين</button>
+                    <button class="btn-nav-link" onclick="switchPage('apply-page')">التقديم على وظيفة</button>
+                </div>
                 <button class="btn-back" onclick="switchPage('welcome-page')">رجوع للرئيسية</button>
             </div>
-            <div id="staff-categories-container"></div>
+
+            <div class="table-container" style="margin-top: 20px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>اسم الموظف</th>
+                            <th>ID السيرفر</th>
+                            <th>رقم الجوال</th>
+                            <th>الرتبة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="visitor-staff-table-body"></tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- ================= 4. لوحة التحكم والإدارة ================= -->
-        <div id="admin-auth-page" class="page">
+        <div id="rating-page" class="page" style="display: none;">
             <div class="header-section">
-                <div></div>
+                <div class="page-title">تقييم موظفي الورشة</div>
+                <div class="nav-links-custom">
+                    <button class="btn-nav-link" onclick="switchPage('prices-page')">الأسعار والمنتجات</button>
+                    <button class="btn-nav-link" onclick="switchPage('staff-page')">قائمة الموظفين</button>
+                    <button class="btn-nav-link active" onclick="switchPage('rating-page')">تقييم الموظفين</button>
+                    <button class="btn-nav-link" onclick="switchPage('apply-page')">التقديم على وظيفة</button>
+                </div>
+                <button class="btn-back" onclick="switchPage('welcome-page')">رجوع للرئيسية</button>
+            </div>
+
+            <div class="admin-form" style="max-width: 600px; margin: 20px auto;">
+                <h3>شاركنا تجربتك وتقييمك للموظف</h3>
+                <div class="admin-inputs" style="display: flex; flex-direction: column; gap: 15px;">
+                    <input type="text" id="rate-customer-name" placeholder="اسمك (اختياري)">
+                    <select id="rate-staff-select"></select>
+                    <select id="rate-stars">
+                        <option value="5">⭐⭐⭐⭐⭐ ممتاز جداً</option>
+                        <option value="4">⭐⭐⭐⭐ جيد جداً</option>
+                        <option value="3">⭐⭐⭐ متوسط</option>
+                        <option value="2">⭐⭐ سيء</option>
+                        <option value="1">⭐ سيء جداً</option>
+                    </select>
+                    <textarea id="rate-feedback" placeholder="اكتب ملاحظاتك هنا..." style="background: #111; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 6px; font-family: inherit; resize: vertical; min-height: 80px;"></textarea>
+                </div>
+                <button onclick="submitRating()" style="background: #e5b842; color: #000; font-weight: bold; margin-top: 15px;">إرسال التقييم</button>
+            </div>
+        </div>
+
+        <div id="apply-page" class="page" style="display: none;">
+            <div class="header-section">
+                <div class="page-title">طلب انضمام لطاقم العمل</div>
+                <div class="nav-links-custom">
+                    <button class="btn-nav-link" onclick="switchPage('prices-page')">الأسعار والمنتجات</button>
+                    <button class="btn-nav-link" onclick="switchPage('staff-page')">قائمة الموظفين</button>
+                    <button class="btn-nav-link" onclick="switchPage('rating-page')">تقييم الموظفين</button>
+                    <button class="btn-nav-link active" onclick="switchPage('apply-page')">التقديم على وظيفة</button>
+                </div>
+                <button class="btn-back" onclick="switchPage('welcome-page')">رجوع للرئيسية</button>
+            </div>
+            
+            <div class="admin-form" style="max-width: 600px; margin: 0 auto 20px auto; border-color: #e5b842;">
+                <h3 style="color: #e5b842;">الاستعلام عن حالة طلب توظيف سابق</h3>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="search-app-id" placeholder="أدخل الـ ID الخاص بك بالسيرفر للفحص">
+                    <button onclick="checkApplicationStatus()" style="background: #e5b842; color: #000; width: auto; white-space: nowrap;">فحص الحالة</button>
+                </div>
+                <div id="search-app-result" style="margin-top: 15px; font-weight: bold; font-size: 15px;"></div>
+            </div>
+
+            <div class="admin-form" style="max-width: 800px; margin: 20px auto; border-color: #7a58bf;">
+                <h3 style="color: #7a58bf; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;">استمارة التوظيف الإلكترونية</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <input type="text" id="app-name" placeholder="الاسم الثلاثي">
+                        <input type="text" id="app-game-id" placeholder="ID الخاص بك في السيرفر">
+                        <input type="text" id="app-discord" placeholder="حساب الديسكورد (مثال: kx_user)">
+                        <input type="number" id="app-age" placeholder="العمر الواقعي">
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <input type="text" id="app-phone" placeholder="رقم الجوال داخل السيرفر">
+                        <select id="app-specialty" style="background: #111; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 6px;">
+                            <option value="" disabled selected>اختر التخصص الذي ترغب به...</option>
+                            <option value="mechanic">ميكانيكي عام (محركات وقطع)</option>
+                            <option value="painter">فني صبغ وتجميل هياكل</option>
+                            <option value="trainee">متدرب جديد</option>
+                        </select>
+                        <select id="app-shift" style="background: #111; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 6px;">
+                            <option value="" disabled selected>وقت التواجد المفضل (الشفت)...</option>
+                            <option value="morning">الفترة الصباحية والظهر</option>
+                            <option value="evening">الفترة المسائية (العصر - العشاء)</option>
+                            <option value="night">فترة آخر الليل (الفجر)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <textarea id="app-exp" placeholder="حدثنا عن خبرتك السابقة في الميكانيكا، ولماذا ترغب بالانضمام لورشة Customs؟" style="width: 100%; box-sizing: border-box; background: #111; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 6px; font-family: inherit; resize: vertical; min-height: 100px; margin-top: 15px;"></textarea>
+                <button onclick="submitApplication()" style="background: #7a58bf; color: #fff; font-weight: bold; margin-top: 20px; width: 100%; padding: 12px; font-size: 16px;">إرسال طلب التوظيف الآن</button>
+            </div>
+        </div>
+
+        <div id="about-page" class="page" style="display: none;">
+            <div class="header-section">
+                <div class="page-title">نبذة عن الورشة وسياساتها العامة</div>
+                <button class="btn-back" onclick="switchPage('welcome-page')">رجوع للرئيسية</button>
+            </div>
+            <div class="about-content-box">
+                <h3>قوانين ورشة Customs العامة:</h3>
+                <ul>
+                    <li>يجب على جميع الفنيين والميكانيكيين احترام الزبائن وتقديم الخدمة بأعلى جودة ممكنة.</li>
+                    <li>يمنع منعاً باتاً تعديل أي مركبة دون تسجيل الفاتورة أو إدخال البيانات في النظام.</li>
+                    <li>تُطبق أسعار رتبة العسكريين فقط عند إبراز البطاقة العسكرية الرسمية السارية بالفيديو/الصورة للـ ID المتقدم.</li>
+                    <li>الالتزام الكامل بالزي الرسمي المخصص للورشة أثناء فترات العمل والمناوبات الرسمية.</li>
+                    <li>أي تلاعب بالأسعار أو استغلال الصلاحيات يعرض صاحبه للفصل الفوري والشطب من النظام السحابي للورشة.</li>
+                </ul>
+                <h3 style="color: #ff9f43; margin-top: 25px;">معلومات الخدمة:</h3>
+                <p>ن نحن نعمل على توفير أحدث القطع الميكانيكية والتجميلية الفاخرة داخل سيرفر <strong>GOLDEN TOWN</strong>، هدفنا التميز والسرعة في الأداء.</p>
+            </div>
+        </div>
+
+        <div id="admin-auth-page" class="page" style="display: none;">
+            <div class="header-section">
+                <div class="page-title">بوابة الإدارة والأمن السحابي</div>
                 <button class="btn-back" onclick="switchPage('welcome-page')">إلغاء ورجوع</button>
             </div>
 
-            <div class="login-box" id="login-box">
+            <div class="login-box" id="login-box" style="display: block;">
                 <h3>قفل الأمان للمسؤولين</h3>
                 <input type="password" id="admin-password" placeholder="أدخل الرقم السري للمسؤول">
                 <button onclick="checkPassword()">تحقق ودخول</button>
@@ -407,302 +314,145 @@
             </div>
 
             <div id="admin-dashboard" style="display: none;">
-                <!-- أ) نموذج المنتجات -->
-                <div class="admin-form">
-                    <h3 id="product-form-title">إضافة خدمة أو قطعة جديدة</h3>
-                    <input type="hidden" id="edit-product-id" value="">
-                    <div class="admin-inputs">
-                        <input type="text" id="new-pname" placeholder="اسم القطعة أو الخدمة">
-                        <input type="number" id="new-pmilitary" placeholder="السعر العسكري">
-                        <input type="number" id="new-pcivilian" placeholder="سعر المواطن">
-                        <select id="new-pcategory">
-                            <option value="performance">تعديل أداء المركبة</option>
-                            <option value="cosmetic">منتج/خدمة تجميلية</option>
-                            <option value="both">كلاهما (الأداء والتجميلي)</option>
-                        </select>
+                
+                <div class="admin-tabs-nav">
+                    <button id="tab-btn-products" class="admin-tab-btn active-products" onclick="switchAdminTab('products')">الأسعار والمنتجات</button>
+                    <button id="tab-btn-staff" class="admin-tab-btn" onclick="switchAdminTab('staff')">قائمة الموظفين</button>
+                    <button id="tab-btn-orders" class="admin-tab-btn" onclick="switchAdminTab('orders')">الطلبات والتقييمات والتوظيف</button>
+                </div>
+
+                <div id="sub-section-products" class="admin-sub-section" style="display: block;">
+                    <div class="admin-form">
+                        <h3 id="product-form-title">إضافة خدمة أو قطعة جديدة</h3>
+                        <input type="hidden" id="edit-product-id" value="">
+                        <div class="admin-inputs">
+                            <input type="text" id="new-pname" placeholder="اسم القطعة أو الخدمة">
+                            <textarea id="new-pdesc" placeholder="وصف المنتج" style="background: #111; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 6px; font-family: inherit; resize: vertical; min-height: 70px;"></textarea>
+                            <input type="number" id="new-pmilitary" placeholder="السعر العسكري (ضع 0 إذا كانت باقة خاصة)">
+                            <input type="number" id="new-pcivilian" placeholder="سعر المواطن (أو السعر الموحد للباقة الخاصة)">
+                            <select id="new-pcategory">
+                                <option value="special">باقة خاصة (سعر موحد للجميع)</option>
+                                <option value="performance">تعديل أداء المركبة</option>
+                                <option value="cosmetic">منتج/خدمة تجميلية</option>
+                            </select>
+                        </div>
+                        <button id="btn-submit-product" onclick="handleProductSubmit()">حفظ وتحديث المنتجات</button>
                     </div>
-                    <button id="btn-submit-product" onclick="handleProductSubmit()">حفظ وتحديث المنتجات</button>
-                </div>
 
-                <!-- ب) نموذج الموظفين -->
-                <div class="admin-form" style="border-color: #7a58bf;">
-                    <h3 id="staff-form-title" style="color: #7a58bf;">إضافة / تعديل موظف بالورشة</h3>
-                    <input type="hidden" id="edit-staff-id" value="">
-                    <div class="admin-inputs">
-                        <input type="text" id="staff-name" placeholder="اسم الموظف">
-                        <input type="text" id="staff-game-id" placeholder="ID الموظف بالسيرفر">
-                        <input type="text" id="staff-phone" placeholder="رقم الجوال">
-                        <select id="staff-rank">
-                            <option value="Owner">Owner - مالك الورشة</option>
-                            <option value="Co Owner">Co Owner - نائب المالك</option>
-                            <option value="General Manager">General Manager - المدير العام</option>
-                            <option value="Supervisor">Supervisor - مشرف</option>
-                            <option value="Mechanic">Mechanic - ميكانيكي</option>
-                            <option value="Trainee">Trainee - متدرب</option>
-                        </select>
+                    <h4 style="color:#e5b842; margin-bottom:10px;">جدول تعديل الأسعار والقطع الحالي</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>اسم الخدمة</th>
+                                    <th>الوصف</th> 
+                                    <th>القسم</th>
+                                    <th>العسكري</th>
+                                    <th>المواطن</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-products-table"></tbody>
+                        </table>
                     </div>
-                    <button id="btn-submit-staff" onclick="handleStaffSubmit()" style="background: #7a58bf;">حفظ وتحديث الموظفين</button>
                 </div>
 
-                <h4 style="color:#e5b842; margin-bottom:10px;">جدول تعديل الأسعار الحالي</h4>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>اسم الخدمة</th>
-                                <th>القسم</th>
-                                <th class="txt-left">العسكري</th>
-                                <th class="txt-left">المواطن</th>
-                                <th class="txt-center">إجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-products-table"></tbody>
-                    </table>
+                <div id="sub-section-staff" class="admin-sub-section" style="display: none;">
+                    <div class="admin-form" style="border-color: #7a58bf;">
+                        <h3 id="staff-form-title" style="color: #7a58bf;">إضافة / تعديل موظف بالورشة</h3>
+                        <input type="hidden" id="edit-staff-id" value="">
+                        <div class="admin-inputs">
+                            <input type="text" id="staff-name" placeholder="اسم الموظف">
+                            <input type="text" id="staff-game-id" placeholder="ID الموظف بالسيرفر">
+                            <input type="text" id="staff-phone" placeholder="رقم الجوال">
+                            <select id="staff-rank">
+                                <option value="Owner">Owner - مالك الورشة</option>
+                                <option value="Co Owner">Co Owner - نائب المالك</option>
+                                <option value="General Manager">General Manager - المدير العام</option>
+                                <option value="Supervisor">Supervisor - مشرف</option>
+                                <option value="Mechanic">Mechanic - ميكانيكي</option>
+                                <option value="Trainee">Trainee - متدرب</option>
+                            </select>
+                        </div>
+                        <button id="btn-submit-staff" onclick="handleStaffSubmit()" style="background: #7a58bf;">حفظ وتحديث الموظفين</button>
+                    </div>
+
+                    <h4 style="color:#7a58bf; margin-bottom:10px; margin-top:20px;">جدول إدارة شؤون الموظفين</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>اسم الموظف</th>
+                                    <th>ID</th>
+                                    <th>رقم الجوال</th>
+                                    <th>الرتبة</th>
+                                    <th class="txt-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-staff-table"></tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <h4 style="color:#7a58bf; margin-bottom:10px; margin-top:20px;">جدول إدارة شؤون الموظفين</h4>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>اسم الموظف</th>
-                                <th>الرتبة</th>
-                                <th>ID</th>
-                                <th>رقم الجوال</th>
-                                <th class="txt-center">إجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-staff-table"></tbody>
-                    </table>
+                <div id="sub-section-orders" class="admin-sub-section" style="display: none;">
+                    <h4 style="color:#ff9f43; margin-bottom:10px;">جدول طلبات التعديل والقطع المرسلة من الزبائن</h4>
+                    <div class="table-container" style="margin-bottom: 25px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>اسم الزبون</th>
+                                    <th>نوع الهوية</th>
+                                    <th>القطع المطلوبة بقائمتها</th>
+                                    <th class="txt-left">السعر الإجمالي المطلوب</th>
+                                    <th class="txt-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-orders-table"></tbody>
+                        </table>
+                    </div>
+
+                    <h4 style="color:#7a58bf; margin-bottom:10px; margin-top:20px;">جدول طلبات التوظيف الجديدة</h4>
+                    <div class="table-container" style="margin-bottom: 25px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>المتقدم</th>
+                                    <th>ID</th>
+                                    <th>ديسكورد</th>
+                                    <th>العمر والاتصال</th>
+                                    <th>الخبرات</th>
+                                    <th>الحالة الحالية</th>
+                                    <th class="txt-center">اتخاذ قرار</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-apps-table"></tbody>
+                        </table>
+                    </div>
+
+                    <h4 style="color:#e5b842; margin-bottom:10px; margin-top:20px;">جدول تقييمات الزبائن الواردة</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الزبون</th>
+                                    <th>الموظف</th>
+                                    <th>التقييم</th>
+                                    <th>التعليق والملاحظات</th>
+                                    <th class="txt-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-ratings-table"></tbody>
+                        </table>
+                    </div>
                 </div>
                 
-                <button class="btn-logout" onclick="logoutAdmin()">تسجيل الخروج وقفل اللوحة</button>
-            </div>
-        </div>
+                <button class="btn-logout" onclick="logoutAdmin()" style="margin-top:30px;">تسجيل الخروج وقفل اللوحة</button>
+            </div> 
+        </div> 
+    </div> 
 
-    </div>
-
-    <script>
-        const ADMIN_PIN = "1234"; 
-        
-        let services = JSON.parse(localStorage.getItem('customs_services')) || [];
-        let staff = JSON.parse(localStorage.getItem('customs_staff')) || [];
-
-        const rankOrder = ["Owner", "Co Owner", "General Manager", "Supervisor", "Mechanic", "Trainee"];
-        const rankLabels = {
-            "Owner": "Owner - مالك الورشة", "Co Owner": "Co Owner - نائب المالك", "General Manager": "General Manager - المدير العام",
-            "Supervisor": "Supervisor - مشرف", "Mechanic": "Mechanic - ميكانيكي", "Trainee": "Trainee - متدرب"
-        };
-        const rankClasses = {
-            "Owner": "badge-owner", "Co Owner": "badge-coowner", "General Manager": "badge-manager",
-            "Supervisor": "badge-supervisor", "Mechanic": "badge-mechanic", "Trainee": "badge-trainee"
-        };
-
-        function saveToLocalStorage() {
-            localStorage.setItem('customs_services', JSON.stringify(services));
-            localStorage.setItem('customs_staff', JSON.stringify(staff));
-        }
-
-        function switchPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            
-            if(pageId !== 'admin-auth-page') {
-                document.getElementById('login-box').style.display = 'block';
-                document.getElementById('admin-dashboard').style.display = 'none';
-                document.getElementById('login-error').style.display = 'none';
-                document.getElementById('admin-password').value = '';
-                resetProductForm();
-                resetStaffForm();
-            }
-        }
-
-        function renderAll() {
-            renderProducts();
-            renderStaff();
-        }
-
-        // --- المنتجات ---
-        function renderProducts() {
-            const perfBody = document.getElementById('perf-table-body');
-            const cosmBody = document.getElementById('cosm-table-body');
-            const adminPBody = document.getElementById('admin-products-table');
-            
-            perfBody.innerHTML = ''; cosmBody.innerHTML = ''; adminPBody.innerHTML = '';
-            let totalCivilianSum = 0; let totalMilitarySum = 0;
-            let hasPerf = false; let hasCosm = false;
-
-            if (services.length === 0) {
-                const emptyMsg = `<tr><td colspan="3" class="empty-msg">لا توجد قطع مضافة حالياً.</td></tr>`;
-                perfBody.innerHTML = emptyMsg; cosmBody.innerHTML = emptyMsg;
-                adminPBody.innerHTML = `<tr><td colspan="5" class="empty-msg">لا توجد منتجات مضافة بعد.</td></tr>`;
-            } else {
-                services.forEach(service => {
-                    const civPrice = parseFloat(service.civilian) || 0;
-                    const milPrice = parseFloat(service.military) || 0;
-                    totalCivilianSum += civPrice; totalMilitarySum += milPrice;
-
-                    let catText = service.category === "performance" ? "أداء" : service.category === "cosmetic" ? "تجميلي" : "كلاهما";
-                    const rowHTML = `<tr><td>${service.name}</td><td class="price-military txt-left">${milPrice.toLocaleString()}</td><td class="price-civilian txt-left">${civPrice.toLocaleString()}</td></tr>`;
-                    
-                    if (service.category === 'performance' || service.category === 'both') { perfBody.innerHTML += rowHTML; hasPerf = true; }
-                    if (service.category === 'cosmetic' || service.category === 'both') { cosmBody.innerHTML += rowHTML; hasCosm = true; }
-
-                    adminPBody.innerHTML += `
-                        <tr>
-                            <td>${service.name}</td>
-                            <td style="color: #aaa; font-size:13px">${catText}</td>
-                            <td class="price-military txt-left">${milPrice.toLocaleString()}</td>
-                            <td class="price-civilian txt-left">${civPrice.toLocaleString()}</td>
-                            <td class="txt-center">
-                                <button class="btn-edit" onclick="startProductEdit(${service.id})">تعديل</button>
-                                <button class="btn-delete" onclick="deleteProduct(${service.id})">حذف</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                if(!hasPerf) perfBody.innerHTML = `<tr><td colspan="3" class="empty-msg">لا توجد منتجات أداء.</td></tr>`;
-                if(!hasCosm) cosmBody.innerHTML = `<tr><td colspan="3" class="empty-msg">لا توجد منتجات تجميلية.</td></tr>`;
-            }
-            document.getElementById('total-civilian').innerText = totalCivilianSum.toLocaleString();
-            document.getElementById('total-military').innerText = totalMilitarySum.toLocaleString();
-        }
-
-        function handleProductSubmit() {
-            const id = document.getElementById('edit-product-id').value;
-            const name = document.getElementById('new-pname').value;
-            const civilian = document.getElementById('new-pcivilian').value;
-            const military = document.getElementById('new-pmilitary').value;
-            const category = document.getElementById('new-pcategory').value;
-
-            if(!name || !civilian || !military) { alert('الرجاء تعبئة بيانات المنتج كاملاً!'); return; }
-
-            if(id === "") {
-                services.push({ id: Date.now(), name, civilian, military, category });
-            } else {
-                const idx = services.findIndex(s => s.id == id);
-                if(idx !== -1) services[idx] = { id: Number(id), name, civilian, military, category };
-                resetProductForm();
-            }
-            saveToLocalStorage(); 
-            clearProductFields(); renderProducts();
-        }
-
-        function startProductEdit(id) {
-            const s = services.find(p => p.id == id);
-            if(s) {
-                document.getElementById('edit-product-id').value = s.id;
-                document.getElementById('new-pname').value = s.name;
-                document.getElementById('new-pcivilian').value = s.civilian;
-                document.getElementById('new-pmilitary').value = s.military;
-                document.getElementById('new-pcategory').value = s.category;
-                document.getElementById('product-form-title').innerText = "تعديل وتحديث المنتج الحالي";
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            }
-        }
-
-        function resetProductForm() { document.getElementById('edit-product-id').value = ""; document.getElementById('product-form-title').innerText = "إضافة خدمة أو قطعة جديدة"; }
-        function clearProductFields() { document.getElementById('new-pname').value = ''; document.getElementById('new-pcivilian').value = ''; document.getElementById('new-pmilitary').value = ''; }
-        function deleteProduct(id) { services = services.filter(s => s.id !== id); saveToLocalStorage(); renderProducts(); }
-
-        // --- الموظفين ---
-        function renderStaff() {
-            const clientStaffContainer = document.getElementById('staff-categories-container');
-            const adminStaffBody = document.getElementById('admin-staff-table');
-            clientStaffContainer.innerHTML = ''; adminStaffBody.innerHTML = '';
-
-            rankOrder.forEach(rank => {
-                const filteredStaff = staff.filter(member => member.rank === rank);
-                if(filteredStaff.length > 0) {
-                    let staffRows = '';
-                    filteredStaff.forEach(member => {
-                        staffRows += `<tr><td>${member.name}</td><td class="txt-center" style="color: #888;">${member.gameId}</td><td class="txt-left" style="color: #888; font-family: monospace;">${member.phone}</td></tr>`;
-                    });
-
-                    clientStaffContainer.innerHTML += `
-                        <div class="staff-category-title ${rankClasses[rank]}">${rankLabels[rank]}</div>
-                        <div class="table-container">
-                            <table>
-                                <thead><tr><th>اسم الموظف</th><th class="txt-center">رقم معرف الموظف (ID)</th><th class="txt-left">رقم الجوال</th></tr></thead>
-                                <tbody>${staffRows}</tbody>
-                            </table>
-                        </div>`;
-                }
-            });
-
-            if(staff.length === 0) {
-                clientStaffContainer.innerHTML = `<div class="empty-msg" style="padding:40px;">لا يوجد موظفين مسجلين في الورشة حالياً.</div>`;
-                adminStaffBody.innerHTML = `<tr><td colspan="5" class="empty-msg">لا يوجد موظفين مضافين.</td></tr>`;
-            } else {
-                staff.forEach(member => {
-                    adminStaffBody.innerHTML += `
-                        <tr>
-                            <td><strong>${member.name}</strong></td>
-                            <td class="${rankClasses[member.rank]}">${member.rank}</td>
-                            <td>${member.gameId}</td>
-                            <td style="font-family: monospace;">${member.phone}</td>
-                            <td class="txt-center">
-                                <button class="btn-edit" onclick="startStaffEdit(${member.id})">تعديل</button>
-                                <button class="btn-delete" onclick="deleteStaff(${member.id})">حذف</button>
-                            </td>
-                        </tr>`;
-                });
-            }
-        }
-
-        function handleStaffSubmit() {
-            const id = document.getElementById('edit-staff-id').value;
-            const name = document.getElementById('staff-name').value;
-            const gameId = document.getElementById('staff-game-id').value;
-            const phone = document.getElementById('staff-phone').value;
-            const rank = document.getElementById('staff-rank').value;
-
-            if(!name || !gameId || !phone) { alert('الرجاء تعبئة كامل الحقول للموظف!'); return; }
-
-            if(id === "") {
-                staff.push({ id: Date.now(), name, gameId, phone, rank });
-            } else {
-                const idx = staff.findIndex(s => s.id == id);
-                if(idx !== -1) staff[idx] = { id: Number(id), name, gameId, phone, rank };
-                resetStaffForm();
-            }
-            saveToLocalStorage(); 
-            clearStaffFields(); renderStaff();
-        }
-
-        function startStaffEdit(id) {
-            const member = staff.find(s => s.id == id);
-            if(member) {
-                document.getElementById('edit-staff-id').value = member.id;
-                document.getElementById('staff-name').value = member.name;
-                document.getElementById('staff-game-id').value = member.gameId;
-                document.getElementById('staff-phone').value = member.phone;
-                document.getElementById('staff-rank').value = member.rank;
-                document.getElementById('staff-form-title').innerText = "تعديل بيانات ورتبة الموظف الحالي";
-                window.scrollTo({top: 150, behavior: 'smooth'});
-            }
-        }
-
-        function resetStaffForm() { document.getElementById('edit-staff-id').value = ""; document.getElementById('staff-form-title').innerText = "إضافة / تعديل موظف بالورشة"; }
-        function clearStaffFields() { document.getElementById('staff-name').value = ''; document.getElementById('staff-game-id').value = ''; document.getElementById('staff-phone').value = ''; }
-        function deleteStaff(id) { staff = staff.filter(s => s.id !== id); saveToLocalStorage(); renderStaff(); }
-
-        function checkPassword() {
-            const enteredPass = document.getElementById('admin-password').value;
-            if (enteredPass === ADMIN_PIN) {
-                document.getElementById('login-box').style.display = 'none';
-                document.getElementById('admin-dashboard').style.display = 'block';
-                document.getElementById('login-error').style.display = 'none';
-                document.getElementById('admin-password').value = '';
-                renderAll();
-            } else {
-                document.getElementById('login-error').style.display = 'block';
-            }
-        }
-
-        function logoutAdmin() { switchPage('welcome-page'); }
-
-        renderAll();
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
